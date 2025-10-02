@@ -30,15 +30,16 @@ steps:
 
 - task: DotNetCoreCLI@2
   inputs:
-    command: publish
-    publishWebProjects: True
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-
-
-- task: DotNetCoreCLI@2
-  inputs:
     azureSubscription: 'Azure subscription 1(8b0bc9d4-37d1-4f2b-ac0e-ab7d60ffe23e)'
     command: 'test'
     projects: '**/TestProject1.csproj'
     arguments: '--configuration $(buildConfiguration)'
+
+- task: PublishCodeCoverageResults@2
+  inputs:
+    summaryFileLocation: '$(Build.SourcesDirectory)/**/MyCoverage/coverage.cobertura.xml'
+    pathToSources: '**/TestProject1.csproj'
+
+
+
 
