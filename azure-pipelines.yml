@@ -30,16 +30,16 @@ steps:
 
 - task: DotNetCoreCLI@2
   inputs:
-    azureSubscription: 'Azure subscription 1(8b0bc9d4-37d1-4f2b-ac0e-ab7d60ffe23e)'
-    command: 'test'
-    projects: '**/TestProject1.csproj'
-    arguments: '--configuration $(buildConfiguration)'
+    command: test
+    projects: '**/webtest.csproj'
+    arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./MyCoverage/'
+    publishTestResults: true
 
-- task: PublishCodeCoverageResults@2
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish Code Coverage Results'
   inputs:
+    codeCoverageTool: 'Cobertura'
     summaryFileLocation: '$(Build.SourcesDirectory)/**/MyCoverage/coverage.cobertura.xml'
-    pathToSources: '**/TestProject1.csproj'
-
 
 
 
