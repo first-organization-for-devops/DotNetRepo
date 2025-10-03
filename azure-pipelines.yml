@@ -15,31 +15,26 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: WhiteSource@21
-  inputs:
-    cwd: '$(System.DefaultWorkingDirectory)'
-    projectName: 'Mend_Bolt_Project'
-
 
 - task: DotNetCoreCLI@2
   displayName: Build
   inputs:
     command: build
     projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
 
 
 - task: DotNetCoreCLI@2
   inputs:
-    command: test
-    projects: '**/TestProject1.csproj'
-    arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./MyCoverage/'
-    publishTestResults: true
+    azureSubscription: 'Azure subscription 1(8b0bc9d4-37d1-4f2b-ac0e-ab7d60ffe23e)'
+    command: 'publish'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    publishWebProjects: true
 
-- task: PublishCodeCoverageResults@1
-  displayName: 'Publish Code Coverage Results'
+- task: PublishPipelineArtifact@1
   inputs:
-    codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(Build.SourcesDirectory)/**/MyCoverage/coverage.cobertura.xml'
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    artifact: 'pipeline-artifact'
 
 
 
